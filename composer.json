@@ -11,11 +11,11 @@
         "symfony/form": "*",
         "symfony/framework-bundle": "*",
         "symfony/twig-bundle": "*",
+        "symfony/debug-pack": "^1.0",
         "symfony/yaml": "*"
     },
     "require-dev": {
         "easycorp/easy-deploy-bundle": "^1.0",
-        "symfony/debug-pack": "^1.0",
         "symfony/dotenv": "*",
         "symfony/web-server-bundle": "*"
     },
