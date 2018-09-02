@@ -7,11 +7,12 @@
         "ext-iconv": "*",
         "sensio/framework-extra-bundle": "^5.2",
         "symfony/console": "*",
+        "symfony/debug-pack": "^1.0",
         "symfony/flex": "^1.1",
         "symfony/form": "*",
         "symfony/framework-bundle": "*",
+        "symfony/process": "*",
         "symfony/twig-bundle": "*",
-        "symfony/debug-pack": "^1.0",
         "symfony/yaml": "*"
     },
     "require-dev": {
