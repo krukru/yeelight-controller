@@ -1,31 +1,37 @@
+{% extends "base.html.twig" %}
 {% block body %}
-<form method="post">
-    <label for="brightness">Brightness</label>
-    <input type="text" name="brightness" id="brightness"/>
+    <div class="row" style="margin: 20px;"></div>
+    <div class="row">
+        <div class="col-md-4" style="background-color: darkseagreen">
+            {{ form_start(lightForm) }}
+            {{ form_widget(lightForm) }}
+            {{ form_end(lightForm) }}
+        </div>
+        <div class="col-md-1"></div>
+        <div class="col-md-4" style="background-color: darkseagreen">
+            {{ form_start(colorForm) }}
+            {{ form_widget(colorForm) }}
+            {{ form_end(colorForm) }}
+        </div>
+    </div>
+    <div class="row" style="margin: 20px;"></div>
+    <div class="row">
+        <div class="col-md-2">
+            <form action="{{ path('yeelight-toggle') }}">
+                <button class="btn-danger btn">Toggle power</button>
+            </form>
+            <br>
+        </div>
+        <div class="col-md-2">
+            <form>
+                <input type="hidden" name="brightness" value="88"/>
+                <input type="hidden" name="temperature" value="2500"/>
+                <button class="btn-primary btn">Žuži <3</button>
+            </form>
+        </div>
+    </div>
 
-    <label for="temperature">Temperature</label>
-    <input type="text" name="temperature" id="temperature"/>
 
-    <button>SAVE</button>
-</form>
-
-<form method="post">
-    <label for="rgb">RGB</label>
-    <input type="text" name="rgb" id="rgb"/>
-
-    <button>SAVE</button>
-</form>
-
-
-<form action="{{ path('yeelight-toggle') }}">
-    <button>Toggle power</button>
-</form>
-
-<form>
-    <input type="hidden" name="brightness" value="88"/>
-    <input type="hidden" name="temperature" value="2500"/>
-    <button>Žuži <3</button>
-</form>
 {% endblock %}
 
 {% block title %}

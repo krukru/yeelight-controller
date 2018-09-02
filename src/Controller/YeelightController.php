@@ -2,6 +2,10 @@
 
 namespace App\Controller;
 
+use App\Entity\ColorSettings;
+use App\Entity\LightSettings;
+use App\Form\ColorSettingsType;
+use App\Form\LightSettingsType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -12,7 +16,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class YeelightController extends AbstractController
 {
     /**
-     * @Route("/", name="index")
+     * @Route("/", name="yeelight-index")
      *
      * @param Request $request
      *
@@ -20,31 +24,40 @@ class YeelightController extends AbstractController
      */
     public function yeelight(Request $request): Response
     {
-        $brightness = $request->get('brightness');
-        $temperature = $request->get('temperature');
-        $rgb = $request->get('rgb');
-        if ($brightness !== null) {
-            $process1 = new Process('yeecli --bulb led1 brightness ' . $brightness);
-            $process2 = new Process('yeecli --bulb led2 brightness ' . $brightness);
-            $process1->run();
-            $process2->run();
+        $lightSettings = new LightSettings();
+        $colorSettings = new ColorSettings();
+        $lightForm = $this->createForm(LightSettingsType::class, $lightSettings);
+        $colorForm = $this->createForm(ColorSettingsType::class, $colorSettings);
+
+        $lightForm->handleRequest($request);
+        $colorForm->handleRequest($request);
+
+        if ($lightForm->isSubmitted() && $lightForm->isValid()) {
+            /** @var LightSettings $lightSettings */
+            $lightSettings = $lightForm->getData();
+
+            if ($lightSettings->brightness !== null) {
+                $this->setBulb('brightness', $lightSettings->brightness);
+            }
+
+            if ($lightSettings->temperature !== null) {
+                $this->setBulb('temperature', $lightSettings->temperature);
+            }
+
+            return $this->redirectToRoute('yeelight-index');
         }
 
-        if ($temperature !== null) {
-            $process1 = new Process('yeecli --bulb led1 temperature ' . $temperature);
-            $process2 = new Process('yeecli --bulb led2 temperature ' . $temperature);
-            $process1->run();
-            $process2->run();
+        if ($colorForm->isSubmitted() && $colorForm->isValid()) {
+            /** @var ColorSettings $colorSettings */
+            $colorSettings = $colorForm->getData();
+
+            $this->setBulb('rgb', $colorSettings->rgb);
         }
 
-        if ($rgb !== null) {
-            $process1 = new Process('yeecli --bulb led1 rgb ' . $rgb);
-            $process2 = new Process('yeecli --bulb led2 rgb ' . $rgb);
-            $process1->run();
-            $process2->run();
-        }
-
-        return $this->render('yeelight.html.twig');
+        return $this->render('yeelight.html.twig', [
+            'lightForm' => $lightForm->createView(),
+            'colorForm' => $colorForm->createView(),
+        ]);
     }
 
     /**
@@ -52,12 +65,9 @@ class YeelightController extends AbstractController
      */
     public function yeelightStop(): RedirectResponse
     {
-        $process1 = new Process('yeecli --bulb led1 toggle');
-        $process2 = new Process('yeecli --bulb led2 toggle');
-        $process1->run();
-        $process2->run();
+        $this->setBulb('toggle');
 
-        return $this->redirectToRoute('yeelight');
+        return $this->redirectToRoute('yeelight-index');
     }
 
     /**
@@ -73,5 +83,17 @@ class YeelightController extends AbstractController
         $process2->run();
 
         return new Response('ok');
+    }
+
+    private function setBulb(string $param, $value = null): void
+    {
+        $process1 = new Process(sprintf(
+            'yeecli --bulb led1 %s %s', $param, $value
+        ));
+        $process2 = new Process(sprintf(
+            'yeecli --bulb led2 %s %s', $param, $value
+        ));
+        $process1->run();
+        $process2->run();
     }
 }
