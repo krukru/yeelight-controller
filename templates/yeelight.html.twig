@@ -1,0 +1,33 @@
+{% block body %}
+<form method="post">
+    <label for="brightness">Brightness</label>
+    <input type="text" name="brightness" id="brightness"/>
+
+    <label for="temperature">Temperature</label>
+    <input type="text" name="temperature" id="temperature"/>
+
+    <button>SAVE</button>
+</form>
+
+<form method="post">
+    <label for="rgb">RGB</label>
+    <input type="text" name="rgb" id="rgb"/>
+
+    <button>SAVE</button>
+</form>
+
+
+<form action="{{ path('yeelight-toggle') }}">
+    <button>Toggle power</button>
+</form>
+
+<form>
+    <input type="hidden" name="brightness" value="88"/>
+    <input type="hidden" name="temperature" value="2500"/>
+    <button>Žuži <3</button>
+</form>
+{% endblock %}
+
+{% block title %}
+
+{% endblock %}
