@@ -10,5 +10,6 @@
 ###< symfony/web-server-bundle ###
 
 ###> userspace ###
+.idea
 .DS_Store
 ###< userspace ###
