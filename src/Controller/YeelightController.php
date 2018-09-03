@@ -51,7 +51,7 @@ class YeelightController extends AbstractController
             /** @var ColorSettings $colorSettings */
             $colorSettings = $colorForm->getData();
 
-            $this->setBulb('rgb', $colorSettings->rgb);
+            $this->setBulb('rgb', substr($colorSettings->rgb, 1));
         }
 
         return $this->render('yeelight.html.twig', [
@@ -66,6 +66,17 @@ class YeelightController extends AbstractController
     public function yeelightStop(): RedirectResponse
     {
         $this->setBulb('toggle');
+
+        return $this->redirectToRoute('yeelight-index');
+    }
+
+    /**
+     * @Route("/reset", name="yeelight-reset")
+     */
+    public function yeelightReset(): RedirectResponse
+    {
+        $this->setBulb('temperature', '88');
+        $this->setBulb('temperature', '2500');
 
         return $this->redirectToRoute('yeelight-index');
     }
