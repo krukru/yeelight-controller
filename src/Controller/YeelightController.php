@@ -6,6 +6,7 @@ use App\Entity\ColorSettings;
 use App\Entity\LightSettings;
 use App\Form\ColorSettingsType;
 use App\Form\LightSettingsType;
+use App\Yeelight\YeelightClientInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,6 +17,16 @@ use Symfony\Component\Routing\Annotation\Route;
 class YeelightController extends AbstractController
 {
     /**
+     * @var YeelightClientInterface
+     */
+    private $client;
+
+    public function __construct(YeelightClientInterface $client)
+    {
+        $this->client = $client;
+    }
+
+    /**
      * @Route("/", name="yeelight-index")
      *
      * @param Request $request
@@ -24,7 +35,12 @@ class YeelightController extends AbstractController
      */
     public function yeelight(Request $request): Response
     {
+        $status = $this->client->getStatus('led1');
+
         $lightSettings = new LightSettings();
+        $lightSettings->brightness = $status->bright;
+        $lightSettings->temperature = $status->ct;
+
         $colorSettings = new ColorSettings();
         $lightForm = $this->createForm(LightSettingsType::class, $lightSettings);
         $colorForm = $this->createForm(ColorSettingsType::class, $colorSettings);

@@ -13,3 +13,6 @@
 .idea
 .DS_Store
 ###< userspace ###
+###> phpunit/phpunit ###
+/phpunit.xml
+###< phpunit/phpunit ###
